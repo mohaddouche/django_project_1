@@ -12,7 +12,8 @@ class Contact(models.Model):
 class Article(models.Model):
     available = models.BooleanField(default=True)
     titel = models.CharField(max_length=200)
-    picture = models.URLField()
+    # picture = models.URLField()
+    picture = models.ImageField(upload_to='images/')
     types = models.ManyToManyField(Type, related_name='article', blank=True)
 
 class Booking(models.Model):

@@ -1,6 +1,7 @@
 # from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Type, Article, Contact, Booking
+from django.template import loader
 
 # Create your views here.
 
@@ -8,7 +9,9 @@ def index(request):
     articles  = Article.objects.filter(available=True)
     formatted_articles = ["<li>{}</li>".format(article.titel) for article in articles]
     message = """<ul>{}</ul>""".format("\n".join(formatted_articles))
-    return HttpResponse(message)
+    template = loader.get_template('store/index.html')
+    context = {'articles': articles}
+    return HttpResponse(template.render(context, request=request))
 
 def listing(request):
     articles  = Article.objects.filter(available=True)

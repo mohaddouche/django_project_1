@@ -1,0 +1,12 @@
+
+{% for article in articles %}
+<div class="col-sm-4 text-center">
+    <a href="/">
+        <img class="img-responsive" src="{{ article.picture.url}}" alt="{{ article.titel }}">
+    </a>
+    <h3><a href="/">{{ article.titel }}</a></h3>
+</div>
+{% if forloop.counter|divisibleby:3 %} <div class="clearfix"></div>{% endif %}
+{% endfor %}
+
+
