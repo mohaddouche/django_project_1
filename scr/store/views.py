@@ -1,4 +1,4 @@
-# from django.shortcuts import render
+from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Type, Article, Contact, Booking
 from django.template import loader
@@ -7,23 +7,28 @@ from django.template import loader
 
 def index(request):
     articles  = Article.objects.filter(available=True)
-    formatted_articles = ["<li>{}</li>".format(article.titel) for article in articles]
-    message = """<ul>{}</ul>""".format("\n".join(formatted_articles))
     template = loader.get_template('store/index.html')
     context = {'articles': articles}
-    return HttpResponse(template.render(context, request=request))
+    return render(request, 'store/index.html', context)
 
 def listing(request):
     articles  = Article.objects.filter(available=True)
-    formatted_articles = ["<li>{}</li>".format(article.titel) for article in articles]
-    message = """<ul>{}</ul>""".format("\n".join(formatted_articles))
-    return HttpResponse(message)
+    context = {
+        'articles': articles
+    }
+    return render(request, 'store/listing.html', context)
+
 
 def detail(request, article_id):
     article = Article.objects.get(pk=article_id)
-    types = " ".join([type.name for type in article.types.all()])
-    message = "l'article {} est concue pour en plusieurs formats, notemment pour {}".format(article.titel, types)
-    return HttpResponse(message)
+    types_name = " ".join([type.name for type in article.types.all()])
+    context = {
+        'article_title': article.titel,
+        'types_name': types_name,
+        'article_id' : article.id,
+        'thumbnail': article.picture
+    }
+    return render(request, 'store/detail.html', context)
 
 def search(request):
     query = request.GET.get('query')
@@ -39,4 +44,9 @@ def search(request):
             articles = ["<li>{}</li>".format(article.titel) for article in articles]
             message = """Nous avon trouvé les articles correspondant à votre requete ! Les voici : 
             <ul>{}</ul>""".format("</li><li>".join(articles))
-    return HttpResponse(message)
+    title = "Résulats pour la requete %s"%query
+    context = {
+        'articles': articles,
+        'title': title
+    }
+    return render(request, 'store/search.html', context)

@@ -17,13 +17,15 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls import include
 from store import views
 from django.conf.urls.static import static
 
+app_name = 'store'  # Définissez l'espace de noms ici
+
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('store/', include('store.urls')), 
+    path('', views.index),
+    # path('store/', include('store.urls', namespace='store')), 
+    path('store/', include(('store.urls', 'store'))), 
     path("admin/", admin.site.urls),
 ]
 
